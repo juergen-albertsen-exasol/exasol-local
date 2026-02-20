@@ -3,7 +3,7 @@
 Get a local [Exasol](https://www.exasol.com) database running in seconds — one command, no configuration.
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/juergen-albertsen-exasol/exasol-local/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/juergen-albertsen-exasol/exasol-local/main/install.sh | bash
 ```
 
 ## What it does
@@ -43,6 +43,6 @@ make test
 # Lint
 make lint
 
-# Run integration tests on a remote Linux machine (see remote/README.md)
-make test-remote
+# Run e2e integration tests (requires remote/host and remote/key.pem)
+make e2e-tests
 ```

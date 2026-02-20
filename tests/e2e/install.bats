@@ -16,7 +16,7 @@ load ../helpers/bats-assert/load
 REMOTE_HOST_FILE="$BATS_TEST_DIRNAME/../../remote/host"
 REMOTE_KEY="$BATS_TEST_DIRNAME/../../remote/key.pem"
 REMOTE_USER="${REMOTE_USER:-ubuntu}"
-INSTALL_URL="https://raw.githubusercontent.com/juergen-albertsen-exasol/exasol-local/main/install.sh"
+INSTALL_CMD="curl -fsSL https://raw.githubusercontent.com/juergen-albertsen-exasol/exasol-local/main/install.sh | bash"
 CONTAINER="exasol-local"
 
 # Helper: run a command on the remote host via SSH
@@ -37,7 +37,7 @@ teardown_file() {
 }
 
 @test "curl | sh exits successfully and prints connection details" {
-  run ssh_remote "curl -fsSL $INSTALL_URL | sh"
+  run ssh_remote "$INSTALL_CMD"
   assert_success
   assert_output --partial "localhost:8563"
   assert_output --partial "sys"
@@ -55,8 +55,8 @@ teardown_file() {
   assert_success
 }
 
-@test "re-running curl | sh is idempotent when container is already running" {
-  run ssh_remote "curl -fsSL $INSTALL_URL | sh"
+@test "re-running install is idempotent when container is already running" {
+  run ssh_remote "$INSTALL_CMD"
   assert_success
   assert_output --partial "already running"
   assert_output --partial "localhost:8563"
