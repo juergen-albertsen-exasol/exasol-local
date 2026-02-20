@@ -20,6 +20,7 @@ The script is **idempotent** — running it again on a machine that already has 
 
 - Linux
 - [Docker Engine](https://docs.docker.com/engine/install/)
+- `sudo` access is used automatically if Docker is not accessible without it
 
 ## Connection details
 

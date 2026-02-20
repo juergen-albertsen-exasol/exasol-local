@@ -7,10 +7,26 @@ SCRIPT="$BATS_TEST_DIRNAME/../install.sh"
 
 setup() {
   source "$SCRIPT"
-  # Make sudo a no-op pass-through so docker() shell mocks are still reachable
-  # (real sudo would bypass shell functions and call the docker executable)
-  sudo() { "$@"; }
-  export -f sudo
+  # Pin DOCKER to plain "docker" so shell function mocks are reachable,
+  # and prevent detect_docker_cmd from overriding it during main() tests.
+  DOCKER="docker"
+  detect_docker_cmd() { :; }
+  export DOCKER
+  export -f detect_docker_cmd
+}
+
+@test "detect_docker_cmd sets DOCKER=docker when docker info succeeds" {
+  docker() { return 0; }
+  export -f docker
+  detect_docker_cmd
+  assert_equal "$DOCKER" "docker"
+}
+
+@test "detect_docker_cmd sets DOCKER='sudo docker' when docker info fails" {
+  docker() { return 1; }
+  export -f docker
+  detect_docker_cmd
+  assert_equal "$DOCKER" "sudo docker"
 }
 
 @test "check_image_cached returns 0 when image exists" {

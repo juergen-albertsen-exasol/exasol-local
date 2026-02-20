@@ -11,8 +11,21 @@ Starts a local Exasol database container and surfaces connection details so a us
 - The Admin UI port is `8443` mapped to `localhost:8443`.
 - Default credentials are username `sys` and password `exasol`.
 - The script is idempotent: running it multiple times MUST NOT create duplicate containers.
+- The script auto-detects whether `sudo` is required: if `docker info` succeeds without `sudo`, plain `docker` is used; otherwise `sudo docker` is used.
 
 ## Scenarios
+
+### Scenario: Docker accessible without sudo
+
+* *GIVEN* `docker info` exits 0 without `sudo`
+* *WHEN* `install.sh` is executed
+* *THEN* the script SHALL use plain `docker` for all Docker commands
+
+### Scenario: Docker requires sudo
+
+* *GIVEN* `docker info` exits non-zero without `sudo`
+* *WHEN* `install.sh` is executed
+* *THEN* the script SHALL use `sudo docker` for all Docker commands
 
 ### Scenario: Container starts from scratch
 
@@ -69,6 +82,8 @@ Starts a local Exasol database container and surfaces connection details so a us
 
 | Scenario | Test type | File |
 |---|---|---|
+| Docker accessible without sudo | Unit | `tests/start_container.bats` |
+| Docker requires sudo | Unit | `tests/start_container.bats` |
 | Container starts from scratch | E2E | `tests/e2e/install.bats` |
 | Image already cached | Unit | `tests/start_container.bats` |
 | Container already running | Unit + E2E | `tests/start_container.bats`, `tests/e2e/install.bats` |
@@ -76,4 +91,4 @@ Starts a local Exasol database container and surfaces connection details so a us
 | Database readiness timeout | Unit | `tests/start_container.bats` |
 | Port 8563 accepts connections after install | E2E | `tests/e2e/install.bats` |
 
-E2E tests run locally via `make e2e-tests`. They SSH to the remote Linux machine and simulate a real user installation: `curl -fsSL <url> | sh`. Docker operations inside `install.sh` use `sudo`. The test removes any pre-existing container before the suite and cleans up after.
+E2E tests run locally via `make e2e-tests`. They SSH to the remote Linux machine and simulate a real user installation: `curl -fsSL <url> | sh`. Docker operations inside `install.sh` use `sudo` when required (auto-detected). The test removes any pre-existing container before the suite and cleans up after.
