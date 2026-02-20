@@ -69,17 +69,14 @@ No existing tool provides a true zero-configuration, single-command local Exasol
 | Run installer locally | `bash install.sh` |
 | Run unit tests locally | `bats tests/` |
 | Run integration tests on remote machine | `make test-remote` |
-| Lint scripts | `shellcheck scripts/start_container.sh` |
+| Lint scripts | `shellcheck install.sh` |
 | Install end-to-end (as users would) | `curl https://downloads.exasol.com/exasol-local \| sh` |
 
 ## Project Structure
 
 ```
 exasol-local/
-├── install.sh              # Main installer — the script delivered by curl
-├── scripts/
-│   ├── start_container.sh  # Pull image, start container, wait, print details, open UI
-│   └── docker_linux.sh     # Docker Engine install logic for Linux (apt/yum/dnf detection)
+├── install.sh              # Main installer — pulls image, starts container, waits, prints details, opens UI
 ├── tests/
 │   ├── start_container.bats  # bats tests for container lifecycle
 │   └── helpers/              # bats helper libraries (bats-support, bats-assert)
@@ -106,8 +103,7 @@ curl | sh
     └─ 6. Open Admin UI (xdg-open https://localhost:8443)
 ```
 
-Container lifecycle logic lives in `scripts/start_container.sh` and is sourced by
-`install.sh`. This separation keeps each component independently testable.
+Container lifecycle logic lives in `install.sh` and is directly testable via bats.
 
 ## Constraints
 

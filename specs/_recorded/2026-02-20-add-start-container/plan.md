@@ -2,7 +2,7 @@
 
 ## Summary
 
-Implements `scripts/start_container.sh` — the Bash script responsible for pulling the Exasol Docker image, starting the container idempotently, waiting for database readiness, printing connection details, and opening the Admin UI.
+Implements `install.sh` — the Bash script responsible for pulling the Exasol Docker image, starting the container idempotently, waiting for database readiness, printing connection details, and opening the Admin UI.
 
 ## Design
 
@@ -20,7 +20,7 @@ Implements `scripts/start_container.sh` — the Bash script responsible for pull
 ### Architecture
 
 ```
-scripts/start_container.sh
+install.sh
     │
     ├─ check_image_cached()      → docker image inspect exasol/docker-db:latest
     │       └─ not found → pull_image()   → docker pull exasol/docker-db:latest
@@ -46,7 +46,7 @@ scripts/start_container.sh
 
 | Pattern | Where | Why |
 |---------|-------|-----|
-| Function-per-responsibility | `start_container.sh` | Makes each step independently testable with bats |
+| Function-per-responsibility | `install.sh` | Makes each step independently testable with bats |
 | TCP poll loop | `wait_for_ready` | No healthcheck in docker-db image; port polling is portable |
 | State machine dispatch | Container state check | Avoids duplicate containers without requiring `--rm` |
 
@@ -72,7 +72,7 @@ scripts/start_container.sh
 
 ## Implementation Tasks
 
-1. Create `scripts/start_container.sh` with functions: `check_image_cached`, `pull_image`, `check_container_state`, `create_container`, `start_existing`, `wait_for_ready`, `print_connection_info`, `open_admin_ui`
+1. Create `install.sh` with functions: `check_image_cached`, `pull_image`, `check_container_state`, `create_container`, `start_existing`, `wait_for_ready`, `print_connection_info`, `open_admin_ui`
 2. Create `tests/start_container.bats` with bats tests covering all five scenarios
 3. Create `Makefile` with `test`, `test-remote`, and `lint` targets; `test-remote` copies scripts and tests to the remote machine via SSH and runs `bats` there
 4. Install bats-core and helpers (`bats-support`, `bats-assert`) as git submodules under `tests/helpers/`
@@ -101,7 +101,7 @@ None — this is the first implementation.
 |------|---------|----------|
 | Unit tests (local) | `bats tests/` | 0 failures |
 | Integration tests (remote) | `make test-remote` | 0 failures on the remote Linux machine |
-| Lint | `shellcheck scripts/start_container.sh` | 0 errors/warnings |
+| Lint | `shellcheck install.sh` | 0 errors/warnings |
 
 ### Manual Testing
 
@@ -109,9 +109,9 @@ All manual steps run on the remote Linux machine (SSH in via `ssh -i remote/key.
 
 | Feature | Test Steps | Expected Result |
 |---------|------------|-----------------|
-| Start from scratch | 1. `docker rm -f exasol-local 2>/dev/null; docker rmi exasol/docker-db:latest 2>/dev/null`. 2. `bash scripts/start_container.sh` | Image pulled, container starts, DSN/credentials printed, `xdg-open` called with `https://localhost:8443` |
-| Already running | 1. Run `bash scripts/start_container.sh` twice | Second run prints details without creating a second container |
-| Stopped container | 1. `docker stop exasol-local`. 2. `bash scripts/start_container.sh` | Container restarted, details printed |
+| Start from scratch | 1. `docker rm -f exasol-local 2>/dev/null; docker rmi exasol/docker-db:latest 2>/dev/null`. 2. `bash install.sh` | Image pulled, container starts, DSN/credentials printed, `xdg-open` called with `https://localhost:8443` |
+| Already running | 1. Run `bash install.sh` twice | Second run prints details without creating a second container |
+| Stopped container | 1. `docker stop exasol-local`. 2. `bash install.sh` | Container restarted, details printed |
 
 ### Scenario Verification
 

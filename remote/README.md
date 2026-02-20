@@ -24,5 +24,5 @@ chmod 600 remote/key.pem
 make test-remote
 ```
 
-This will copy `scripts/` and `tests/` to the remote machine and execute `bats tests/` there.
+This will copy `install.sh` and `tests/` to the remote machine and execute `bats tests/` there.
 The remote machine must have Docker Engine and bats installed.

@@ -3,7 +3,7 @@
 load helpers/bats-support/load
 load helpers/bats-assert/load
 
-SCRIPT="$BATS_TEST_DIRNAME/../scripts/start_container.sh"
+SCRIPT="$BATS_TEST_DIRNAME/../install.sh"
 
 setup() {
   source "$SCRIPT"
