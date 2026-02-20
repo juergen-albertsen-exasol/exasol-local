@@ -68,7 +68,7 @@ No existing tool provides a true zero-configuration, single-command local Exasol
 |---|---|
 | Run installer locally | `bash install.sh` |
 | Run unit tests locally | `bats tests/start_container.bats` |
-| Run unit tests on remote + e2e via curl \| sh | `make test-remote` |
+| Run e2e integration tests | `make e2e-tests` |
 | Lint scripts | `shellcheck install.sh` |
 | Install end-to-end (as users would) | `curl https://downloads.exasol.com/exasol-local \| sh` |
 
@@ -86,7 +86,7 @@ exasol-local/
 │   └── README.md           # Documents expected files (host, key.pem)
 ├── specs/
 │   └── mission.md          # This file
-└── Makefile                # Targets: test, test-remote, lint
+└── Makefile                # Targets: test, e2e-tests, lint
 ```
 
 ## Architecture
@@ -113,5 +113,5 @@ Container lifecycle logic lives in `install.sh` and is directly testable via bat
 - **No runtime dependencies** beyond what the script installs — users run it on a fresh machine
 - **Non-destructive** — re-running the installer on a machine that already has Docker and
   Exasol running must be safe (idempotent)
-- **Integration tests run on a remote Linux machine** — credentials (hostname + PEM key) are
+- **E2E tests SSH to a remote Linux machine** — credentials (hostname + PEM key) are
   stored in `remote/` which is gitignored; see `remote/README.md` for setup instructions

@@ -18,11 +18,12 @@ cp /path/to/your-key.pem remote/key.pem
 chmod 600 remote/key.pem
 ```
 
-## Running integration tests
+## Running e2e tests
 
 ```bash
-make test-remote
+make e2e-tests
 ```
 
-This will copy `install.sh` and `tests/` to the remote machine and execute `bats tests/` there.
-The remote machine must have Docker Engine and bats installed.
+This runs the e2e test suite locally. Each test SSHes to the remote machine and executes
+`curl ... | sh` as a real user would, then checks the resulting container state.
+The remote machine must have Docker Engine installed.

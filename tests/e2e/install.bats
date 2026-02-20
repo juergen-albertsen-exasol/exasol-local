@@ -8,7 +8,7 @@
 #   remote/host     — hostname or IP of the remote Linux machine
 #   remote/key.pem  — SSH private key with access to that machine
 #
-# Run via: make test-remote
+# Run via: make e2e-tests
 
 load ../helpers/bats-support/load
 load ../helpers/bats-assert/load
