@@ -64,3 +64,16 @@ Starts a local Exasol database container and surfaces connection details so a us
 * *AND* the database does not accept TCP connections on port `8563` within 120 seconds
 * *THEN* the script SHALL print an error message indicating the startup timed out
 * *AND* the script SHALL exit with a non-zero status code
+
+## Test Coverage
+
+| Scenario | Test type | File |
+|---|---|---|
+| Container starts from scratch | E2E | `tests/e2e/install.bats` |
+| Image already cached | Unit | `tests/start_container.bats` |
+| Container already running | Unit + E2E | `tests/start_container.bats`, `tests/e2e/install.bats` |
+| Stopped container exists | Unit | `tests/start_container.bats` |
+| Database readiness timeout | Unit | `tests/start_container.bats` |
+| Port 8563 accepts connections after install | E2E | `tests/e2e/install.bats` |
+
+E2E tests run on the remote Linux machine via `make test-remote`. They use `sudo` (Docker requires root on the remote host), remove any pre-existing container before the run, and remove it again on teardown.
