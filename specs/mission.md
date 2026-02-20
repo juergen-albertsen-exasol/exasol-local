@@ -68,7 +68,7 @@ No existing tool provides a true zero-configuration, single-command local Exasol
 |---|---|
 | Run installer locally | `bash install.sh` |
 | Run unit tests locally | `bats tests/start_container.bats` |
-| Run e2e integration tests on remote machine | `make test-remote` |
+| Run unit tests on remote + e2e via curl \| sh | `make test-remote` |
 | Lint scripts | `shellcheck install.sh` |
 | Install end-to-end (as users would) | `curl https://downloads.exasol.com/exasol-local \| sh` |
 
@@ -80,7 +80,7 @@ exasol-local/
 ├── tests/
 │   ├── start_container.bats  # unit tests — container lifecycle (mocked docker/nc)
 │   ├── e2e/
-│   │   └── install.bats      # e2e integration tests — run on remote Linux via make test-remote
+│   │   └── install.bats      # e2e tests — run locally, SSH to remote, curl | sh the real URL
 │   └── helpers/              # bats helper libraries (bats-support, bats-assert)
 ├── remote/                 # Gitignored — SSH credentials for the remote test machine
 │   └── README.md           # Documents expected files (host, key.pem)

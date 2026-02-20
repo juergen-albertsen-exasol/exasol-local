@@ -17,7 +17,8 @@ test-remote: $(REMOTE_HOST_FILE) $(REMOTE_KEY)
 		$(REMOTE_USER)@$(REMOTE_HOST):$(REMOTE_DIR)/
 	ssh -i $(REMOTE_KEY) -o StrictHostKeyChecking=no \
 		$(REMOTE_USER)@$(REMOTE_HOST) \
-		"cd $(REMOTE_DIR) && bats tests/start_container.bats && bats tests/e2e/install.bats"
+		"cd $(REMOTE_DIR) && bats tests/start_container.bats"
+	$(BATS) tests/e2e/install.bats
 
 lint:
 	shellcheck install.sh

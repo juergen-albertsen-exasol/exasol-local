@@ -11,24 +11,24 @@ READY_TIMEOUT="${READY_TIMEOUT:-120}"
 
 # Returns 0 if the Docker image is already present locally.
 check_image_cached() {
-  docker image inspect "$IMAGE" > /dev/null 2>&1
+  sudo docker image inspect "$IMAGE" > /dev/null 2>&1
 }
 
 # Pulls the Docker image from the registry.
 pull_image() {
   echo "Pulling $IMAGE ..."
-  docker pull "$IMAGE"
+  sudo docker pull "$IMAGE"
 }
 
 # Outputs the current state of the named container, or empty string if absent.
 check_container_state() {
-  docker inspect --format '{{.State.Status}}' "$CONTAINER_NAME" 2>/dev/null || true
+  sudo docker inspect --format '{{.State.Status}}' "$CONTAINER_NAME" 2>/dev/null || true
 }
 
 # Creates and starts a new detached container.
 create_container() {
   echo "Creating and starting container $CONTAINER_NAME ..."
-  docker run \
+  sudo docker run \
     --name "$CONTAINER_NAME" \
     -p "127.0.0.1:${SQL_PORT}:${SQL_PORT}" \
     -p "127.0.0.1:${ADMIN_PORT}:${ADMIN_PORT}" \
@@ -41,7 +41,7 @@ create_container() {
 # Starts an existing stopped container.
 start_existing() {
   echo "Starting existing container $CONTAINER_NAME ..."
-  docker start "$CONTAINER_NAME"
+  sudo docker start "$CONTAINER_NAME"
 }
 
 # Polls TCP port $SQL_PORT until the database accepts connections or timeout.

@@ -76,4 +76,4 @@ Starts a local Exasol database container and surfaces connection details so a us
 | Database readiness timeout | Unit | `tests/start_container.bats` |
 | Port 8563 accepts connections after install | E2E | `tests/e2e/install.bats` |
 
-E2E tests run on the remote Linux machine via `make test-remote`. They use `sudo` (Docker requires root on the remote host), remove any pre-existing container before the run, and remove it again on teardown.
+E2E tests run locally via `make test-remote`. They SSH to the remote Linux machine and simulate a real user installation: `curl -fsSL <url> | sh`. Docker operations inside `install.sh` use `sudo`. The test removes any pre-existing container before the suite and cleans up after.

@@ -7,6 +7,10 @@ SCRIPT="$BATS_TEST_DIRNAME/../install.sh"
 
 setup() {
   source "$SCRIPT"
+  # Make sudo a no-op pass-through so docker() shell mocks are still reachable
+  # (real sudo would bypass shell functions and call the docker executable)
+  sudo() { "$@"; }
+  export -f sudo
 }
 
 @test "check_image_cached returns 0 when image exists" {
